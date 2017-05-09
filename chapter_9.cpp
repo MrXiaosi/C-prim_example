@@ -122,9 +122,9 @@ void chapter_9_func3()
 {
 	using namespace std;
 	vector<int> vi{ 0, 1, 2, 3, 4 };
-	vi.reserve(10);										// 设定vi空间为10个元素
+	vi.reserve(10);										// 设定vi预留空间为10个元素
 	cout << "vi.size: " << vi.size() << endl;			// 已保存元素个数
-	cout << "vi.capacity: " << vi.capacity() << endl;	// 不分配新空间情况下能保存的个数
+	cout << "vi.capacity: " << vi.capacity() << endl;	// 不分配新空间情况下能保存的个数(预留空间)
 }
 
 //*************
@@ -149,6 +149,7 @@ void chapter_9_func4()
 	// 搜索
 	string dept("rs03p714p3");
 	string number("0123456789");
+	// 参数中增加，pos指定从哪里开始查找
 	auto pos = dept.find("p");				// 查找p第一次出现位置
 	pos = dept.rfind("p");					// 查找p最后一次出现位置
 	pos = dept.find_first_of(number);		// number中任何一个字符第一次出现位置
