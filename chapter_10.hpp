@@ -11,4 +11,4 @@ void chapter_10_func4();
 void chapter_10_func5();
 void chapter_10_func6();
 
-#endif
+#endif		// CHAPTER_10_HPP_

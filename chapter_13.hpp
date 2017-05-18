@@ -1,10 +1,11 @@
 //********************************************************
-// chapter_13、类设计工具
+// chapter_13、14 类设计工具、运算符重载
 // 构造函数、拷贝构造函数、拷贝赋值运算符、析构函数等
 //********************************************************
 #ifndef CHAPTER_13_HPP_
 #define CHAPTER_13_HPP_
 
+#include <iostream>
 #include <set>
 
 //*************
@@ -14,6 +15,10 @@
 //*************
 class HasPtr1
 {
+	friend std::ostream& operator<< (std::ostream &os, const HasPtr1 &hp);
+	friend HasPtr1 operator+(const HasPtr1 &lhs, const HasPtr1 &rhs);
+	friend bool operator==(const HasPtr1 &lhs, const HasPtr1 &rhs);
+	friend bool operator!=(const HasPtr1 &lhs, const HasPtr1 &rhs);
 public:
 	HasPtr1(const std::string &str = std::string())
 		:ps_(new std::string(str)), i_(0)
@@ -23,6 +28,11 @@ public:
 	HasPtr1(const HasPtr1 &p)
 		:ps_(new std::string(*p.ps_)), i_(p.i_)
 	{
+	}
+
+	bool operator()(const std::string &str) const
+	{
+		return str.size() > i_;
 	}
 
 	HasPtr1& operator=(const HasPtr1 &p)
@@ -35,6 +45,22 @@ public:
 		ps_ = new_ps;
 		i_ = p.i_;
 		return *this;
+	}
+
+	HasPtr1 operator++()			// 前置递增
+	{
+	}
+
+	HasPtr1 operator++(int)			// 后置递增，int仅用于区分前置后置，无需填实参
+	{
+	}
+
+	// 类型转换运算符 operator type() const{ }
+	// 必须是成员函数，不能声明返回值，形参列表必须为空，通常为const函数
+    // explicit operator int() const		// explicit不允许隐式调用
+	operator int() const
+	{
+		return i_;
 	}
 
 	void swap(HasPtr1 &lhs, HasPtr1 &rhs)
@@ -55,6 +81,33 @@ private:
 	std::string *ps_;
 	int i_;
 };
+
+// 重载运算符
+std::ostream& operator<< (std::ostream &os, const HasPtr1 &hp)
+{
+	os << "string: " << *(hp.ps_) << ". val: " << hp.i_;
+	return os;
+}
+
+HasPtr1 operator+(const HasPtr1 &lhs, const HasPtr1 &rhs)
+{
+	HasPtr1 sum;
+	auto new_ps = new std::string((*lhs.ps_) + (*rhs.ps_));
+	delete sum.ps_;
+	sum.ps_ = new_ps;
+	sum.i_ = lhs.i_ + rhs.i_;
+	return sum;
+}
+
+bool operator==(const HasPtr1 &lhs, const HasPtr1 &rhs)
+{
+	return *lhs.ps_ == *rhs.ps_ && lhs.i_ == rhs.i_;
+}
+
+bool operator!=(const HasPtr1 &lhs, const HasPtr1 &rhs)
+{
+	return !(lhs == rhs);
+}
 
 //*************
 // HasPtr2类
@@ -263,6 +316,5 @@ private:
 	std::string *tail_;				// 指向内存尾部
 	std::string *first_free_;		// 指向未使用内存
 };
-
 
 #endif	// CHAPTER_13_HPP_
