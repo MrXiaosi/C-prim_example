@@ -1,6 +1,6 @@
 //********************************************************
-// chapter_15 ÃæÏò¶ÔÏó³ÌĞòÉè¼Æ
-// ¼Ì³Ğ¡¢ÅÉÉú¡¢Ğéº¯ÊıµÈ
+// chapter_15 é¢å‘å¯¹è±¡ç¨‹åºè®¾è®¡
+// ç»§æ‰¿ã€æ´¾ç”Ÿã€è™šå‡½æ•°ç­‰
 //********************************************************
 #ifndef CHAPTER_15_HPP_
 #define CHAPTER_15_HPP_
@@ -10,7 +10,7 @@
 
 using namespace std;
 
-//class BookBase final		final½ûÖ¹Àà±»¼Ì³Ğ
+//class BookBase final		finalç¦æ­¢ç±»è¢«ç»§æ‰¿
 class BookBase
 {
 public:
@@ -45,35 +45,85 @@ public:
 	}
 
 	virtual ~BookBase()
+//********************************************************
+// chapter_15 é¢å‘å¯¹è±¡ç¨‹åºè®¾è®¡
+// ç»§æ‰¿ã€æ´¾ç”Ÿã€è™šå‡½æ•°ç­‰
+//********************************************************
+#ifndef CHAPTER_15_HPP_
+#define CHAPTER_15_HPP_
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+//class BookBase final		finalç¦æ­¢ç±»è¢«ç»§æ‰¿
+class BookBase
+{
+public:
+	explicit BookBase(const string &str = string(), double pri = 0.0)
+		:isbn_(str), price_(pri)
 	{
 	}
 
-private:
+	BookBase(const BookBase& b)
+	{
+		price_ = b.price_;
+		i_ = b.i_;
+		isbn_ = b.isbn_;
+	}
+
+	string isbn() const
+	{
+		return isbn_;
+	}
+
+	double price() const
+	{
+		return price_;
+	}
+
+	void set_i(size_t i)
+	{
+		i_ = i;
+	}
+
+	size_t i()
+	{
+		return i_;
+	}
+
+	virtual double net_price(size_t n) const
+	{
+		return n * price_;
+	}
+
+	virtual ~BookBase()
+	{
+		// å¸¦å¤šæ€æ€§è´¨çš„base classåº”è¯¥ç”Ÿå‘½ä¸€ä¸ªvirtualææ„å‡½æ•°
+		// è‹¥classå¸¦æœ‰ä»»ä½•virtualå‡½æ•°ï¼Œå°±åº”è¯¥æœ‰virtualææ„å‡½æ•°
+	}
 	
-	BookBase(const BookBase&)
+private:
+	BookBase operator=(const BookBase& b)
 	{
-		// ²»ÔÊĞí¿½±´
-	}
-
-	BookBase operator=(const BookBase&)
-	{
-		// ²»ÔÊĞí¸³Öµ
+		// ä¸å…è®¸ä½¿ç”¨
 	}
 
 private:
 	string isbn_;
 
 protected:
-	// protected³ÉÔ±¿É±»±¾Àà¡¢ÓÑÔª¡¢ÅÉÉúÀà·ÃÎÊ
+	// protectedæˆå‘˜å¯è¢«æœ¬ç±»ã€å‹å…ƒã€æ´¾ç”Ÿç±»è®¿é—®
 	double price_;
 	static size_t i_;
 };
 
 class BulkBook :public BookBase
 {
-	// private ÅÉÉú£¬¿ÉÒÔ·ÃÎÊ»ùÀà¶ÔÏóµÄprivate
-	// public ¹«ÓĞÅÉÉú£¬Ôò»ùÀàµÄ¹«ÓĞ³ÉÔ±Ò²ÊÇÅÉÉúÀà½Ó¿ÚµÄ×é³É²¿·Ö£¬
-	// ÄÜ½«ÅÉÉúÀàĞÍµÄ¶ÔÏó°ó¶¨µ½»ùÀàµÄÒıÓÃ»òÖ¸ÕëÉÏ
+	// private æ´¾ç”Ÿï¼Œå¯ä»¥è®¿é—®åŸºç±»å¯¹è±¡çš„private
+	// public å…¬æœ‰æ´¾ç”Ÿï¼Œåˆ™åŸºç±»çš„å…¬æœ‰æˆå‘˜ä¹Ÿæ˜¯æ´¾ç”Ÿç±»æ¥å£çš„ç»„æˆéƒ¨åˆ†ï¼Œ
+	// èƒ½å°†æ´¾ç”Ÿç±»å‹çš„å¯¹è±¡ç»‘å®šåˆ°åŸºç±»çš„å¼•ç”¨æˆ–æŒ‡é’ˆä¸Š
 public:
 	BulkBook(const string&str=string(), double pri=0.0, size_t m=0, double discount=0)
 		:BookBase(str, pri),
@@ -82,10 +132,20 @@ public:
 	{
 	}
 
-	// ¸ÄĞ´Ğéº¯ÊıÊ±ĞÎ²Î¡¢·µ»ØÖµĞèÑÏ¸ñÆ¥Åä£¨·µ»ØÖµÌØÀı£º»ùÀàBµÄĞéº¯Êıf·µ»ØB*£¬C¼Ì³ĞB£¬¸ÄĞ´f·µ»ØÖµ¿ÉÒÔÊÇC*£©
-	// overrideÏÔÊ¾×¢Ã÷¸ÄĞ´»ùÀàĞéº¯Êı£¬±ê×¢ºó±àÒëÆ÷»á°ïÖú¼ì²éÊÇ·ñÆ¥Åä
-	// Èô²»¸ÄĞ´£¬½«Ö±½Ó¼Ì³Ğ»ùÀà
-	// ×¢Òâ£ºÈôĞéº¯ÊıÊ¹ÓÃÄ¬ÈÏÊµ²Î£¬Ôò»ùÀàºÍÅÉÉúÀàÖĞ¶¨ÒåµÄÄ¬ÈÏÊµ²Î×îºÃÒ»ÖÂ
+	//using BookBase::BookBase;			// ç»§æ‰¿æ„é€ å‡½æ•°
+	BulkBook(const BulkBook &b)
+	{
+		// å…ˆè°ƒç”¨åŸºç±»æ‹·è´ï¼Œå†æ‹·è´æ´¾ç”Ÿç±»è‡ªæœ‰å¯¹è±¡
+		// ç§»åŠ¨æ„é€ å‡½æ•°åŒç†ï¼ˆoperator=ï¼‰
+		BookBase::BookBase(b);
+		min_qty_ = b.min_qty_;
+		discount_ = b.discount_;
+	}
+
+	// æ”¹å†™è™šå‡½æ•°æ—¶å½¢å‚ã€è¿”å›å€¼éœ€ä¸¥æ ¼åŒ¹é…ï¼ˆè¿”å›å€¼ç‰¹ä¾‹ï¼šåŸºç±»Bçš„è™šå‡½æ•°fè¿”å›B*ï¼ŒCç»§æ‰¿Bï¼Œæ”¹å†™fè¿”å›å€¼å¯ä»¥æ˜¯C*ï¼‰
+	// overrideæ˜¾ç¤ºæ³¨æ˜æ”¹å†™åŸºç±»è™šå‡½æ•°ï¼Œæ ‡æ³¨åç¼–è¯‘å™¨ä¼šå¸®åŠ©æ£€æŸ¥æ˜¯å¦åŒ¹é…
+	// è‹¥ä¸æ”¹å†™ï¼Œå°†ç›´æ¥ç»§æ‰¿åŸºç±»
+	// æ³¨æ„ï¼šè‹¥è™šå‡½æ•°ä½¿ç”¨é»˜è®¤å®å‚ï¼Œåˆ™åŸºç±»å’Œæ´¾ç”Ÿç±»ä¸­å®šä¹‰çš„é»˜è®¤å®å‚æœ€å¥½ä¸€è‡´
 	double net_price(size_t n) const override
 	{
 		return n >= min_qty_ ? n*price_*discount_ : n*price_;
@@ -103,8 +163,14 @@ private:
 	double discount_;
 };
 
-
-
+class AWOV
+{
+public:
+	virtual ~AWOV() = 0
+	{
+		// çº¯è™šææ„å‡½æ•°éœ€æä¾›å®šä¹‰
+	}
+};
 
 void chapter_15_func1();
 void chapter_15_func2();
